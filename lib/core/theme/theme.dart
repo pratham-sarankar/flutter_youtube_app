@@ -376,5 +376,25 @@ class MaterialTheme {
             iconSize: 24,
           ),
         ),
+        chipTheme: ChipThemeData(
+          selectedColor: colorScheme.onSurface,
+          backgroundColor: colorScheme.surface,
+          labelStyle: textTheme.bodyLarge?.copyWith(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          showCheckmark: false,
+          secondaryLabelStyle: textTheme.bodyLarge?.copyWith(
+            color: colorScheme.surfaceBright,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          shape: const StadiumBorder(),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 6,
+          ),
+        ),
       );
 }
