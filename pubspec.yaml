@@ -37,7 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   iconly: ^1.0.1
-  youtube_scrape_api: ^0.0.6
+  flutter_bloc: ^8.1.6
+  bloc_concurrency: ^0.2.5
+
+  flutter_youtube_search:
+    path: /Users/prathamsarankar/StudioProjects/flutter_youtube_search
 
 dev_dependencies:
   flutter_test:

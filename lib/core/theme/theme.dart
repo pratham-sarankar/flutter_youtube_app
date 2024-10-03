@@ -356,11 +356,11 @@ class MaterialTheme {
           selectedLabelStyle: textTheme.bodyLarge!.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 14,
           ),
           unselectedLabelStyle: textTheme.bodyLarge!.copyWith(
             color: colorScheme.onSurfaceVariant,
-            fontSize: 12,
+            fontSize: 14,
           ),
         ),
         appBarTheme: AppBarTheme(
@@ -382,15 +382,15 @@ class MaterialTheme {
           labelStyle: textTheme.bodyLarge?.copyWith(
             color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 14,
           ),
           showCheckmark: false,
           secondaryLabelStyle: textTheme.bodyLarge?.copyWith(
             color: colorScheme.surfaceBright,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 14,
           ),
-          shape: const StadiumBorder(),
+          // shape: const StadiumBorder(),
           padding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 6,
