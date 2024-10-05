@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/blocs/feed_bloc/feed_bloc.dart';
@@ -45,11 +48,14 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       body: BlocConsumer<FeedBloc, FeedBlocState>(
         bloc: bloc,
-        listener: (context, state) {},
+        listener: (context, state) {
+          log("FeedBloc: $state");
+        },
         builder: (context, state) {
           return SafeArea(
             child: CustomScrollView(
               controller: scrollController,
+              physics: const ClampingScrollPhysics(),
               slivers: [
                 SliverPersistentHeader(
                   pinned: false,
@@ -74,7 +80,19 @@ class _FeedScreenState extends State<FeedScreen> {
                 if (state.isLoadingMore)
                   const SliverToBoxAdapter(
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        child: Column(
+                          children: [
+                            CupertinoActivityIndicator(radius: 12),
+                            SizedBox(height: 5),
+                            Text(
+                              "Loading More...",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
               ],

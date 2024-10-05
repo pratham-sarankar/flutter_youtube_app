@@ -10,7 +10,6 @@ class FetchFeedUseCase {
     repository = RemoteVideoFeedDataSource();
     // final result = await repository.fetchFeed(query);
     final result = await compute(repository.fetchFeed, query);
-    print(result.contents.length);
     return result;
   }
 }

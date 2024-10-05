@@ -98,9 +98,32 @@ class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                           ],
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(IconlyLight.search),
-                        onPressed: () {},
+                      SearchAnchor(
+                        builder: (context, controller) {
+                          return IconButton(
+                            icon: const Icon(IconlyLight.search),
+                            onPressed: () {
+                              controller.openView();
+                            },
+                          );
+                        },
+                        viewLeading: IconButton(
+                          icon: const Icon(IconlyLight.arrow_left),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        suggestionsBuilder: (context, controller) {
+                          return [
+                            ListTile(
+                              title: const Text("Flutter"),
+                            ),
+                            ListTile(
+                              title: const Text("Dart"),
+                            ),
+                          ];
+                        },
+                        isFullScreen: true,
                       ),
                     ],
                   ),

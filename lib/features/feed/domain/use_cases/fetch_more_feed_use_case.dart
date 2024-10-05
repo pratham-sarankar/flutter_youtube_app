@@ -8,7 +8,6 @@ class FetchMoreFeedUseCase {
   Future<YoutubeSearchResponse> execute(String continuationKey) async {
     repository = RemoteVideoFeedDataSource();
     final result = await repository.fetchMoreFeed(continuationKey);
-    print(result.contents.length);
     return result;
   }
 }
