@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/pages/feed_screen.dart';
+import 'package:flutter_youtube_app/features/profile/presentation/pages/profile_screen.dart';
 import 'package:iconly/iconly.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -56,11 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text("Library Page"),
             ),
           ),
-          Scaffold(
-            body: Center(
-              child: Text("Profile Page"),
-            ),
-          ),
+          ProfileScreen(),
         ],
       ),
     );

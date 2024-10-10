@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/blocs/feed_bloc/feed_bloc.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/blocs/feed_bloc/feed_bloc_event.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/blocs/feed_bloc/feed_bloc_state.dart';
-import 'package:flutter_youtube_app/features/feed/presentation/widgets/custom_sliver_header_delegate.dart';
+import 'package:flutter_youtube_app/features/feed/presentation/widgets/feed_app_bar.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/widgets/youtube_video_card.dart';
 import 'package:flutter_youtube_search/models/youtube_video.dart';
 
@@ -38,7 +38,7 @@ class _FeedScreenState extends State<FeedScreen> {
   void _scrollEndListener() {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
-      bloc.add(FetchMoreFeedEvent(bloc.state.continuationKey!));
+      bloc.add(FetchMoreFeedEvent(bloc.state.continuationKey));
     }
   }
 
@@ -60,7 +60,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 SliverPersistentHeader(
                   pinned: false,
                   floating: true,
-                  delegate: CustomSliverHeaderDelegate(
+                  delegate: FeedAppBar(
                     minHeight: height * 0.08,
                     height: height * 0.15,
                   ),

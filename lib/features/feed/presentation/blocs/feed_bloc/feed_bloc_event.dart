@@ -7,7 +7,7 @@ class FetchFeedEvent extends FeedBlocEvent {
 }
 
 class FetchMoreFeedEvent extends FeedBlocEvent {
-  final String continuationKey;
+  final String? continuationKey;
 
   FetchMoreFeedEvent(this.continuationKey);
 }

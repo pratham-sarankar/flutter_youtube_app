@@ -26,10 +26,16 @@ class FeedBloc extends Bloc<FeedBlocEvent, FeedBlocState> {
       FetchMoreFeedEvent event, Emitter<FeedBlocState> emit) async {
     emit(state.copyWith(isLoadingMore: true));
     final useCase = FetchMoreFeedUseCase();
-    final response = await useCase.execute(event.continuationKey);
+    if (state.continuationKey == null) {
+      emit(state.copyWith(isLoadingMore: false));
+      return;
+    }
+    final response = await useCase.execute(event.continuationKey!);
     emit(state
         .copyWith(
-            isLoadingMore: false, continuationKey: response.continuationKey)
+          isLoadingMore: false,
+          continuationKey: response.continuationKey,
+        )
         .addAll(response.contents));
   }
 }

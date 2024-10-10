@@ -5,11 +5,11 @@ import 'package:flutter_youtube_search/youtube_search.dart';
 class RemoteVideoFeedDataSource extends VideoFeedRepository {
   @override
   Future<YoutubeSearchResponse> fetchFeed(String query) async {
-    return await YoutubeSearch.search(query: query);
+    return await YoutubeSearch().search(query: query);
   }
 
   @override
   Future<YoutubeSearchResponse> fetchMoreFeed(String continuationKey) async {
-    return await YoutubeSearch.next(continuationKey);
+    return await YoutubeSearch().next(continuationKey);
   }
 }

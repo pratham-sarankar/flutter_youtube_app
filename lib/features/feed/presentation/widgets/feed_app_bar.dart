@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 
-class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
+class FeedAppBar extends SliverPersistentHeaderDelegate {
   final double height;
   final double minHeight;
 
-  CustomSliverHeaderDelegate({
+  FeedAppBar({
     required this.height,
     required this.minHeight,
   });
@@ -115,15 +115,17 @@ class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                         ),
                         suggestionsBuilder: (context, controller) {
                           return [
-                            ListTile(
-                              title: const Text("Flutter"),
+                            const ListTile(
+                              title: Text("Flutter"),
                             ),
-                            ListTile(
-                              title: const Text("Dart"),
+                            const ListTile(
+                              title: Text("Dart"),
                             ),
                           ];
                         },
                         isFullScreen: true,
+                        viewBackgroundColor:
+                            Theme.of(context).colorScheme.surface,
                       ),
                     ],
                   ),
@@ -143,7 +145,7 @@ class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => minHeight;
 
   @override
-  bool shouldRebuild(covariant CustomSliverHeaderDelegate oldDelegate) {
+  bool shouldRebuild(covariant FeedAppBar oldDelegate) {
     return height != oldDelegate.maxExtent ||
         minHeight != oldDelegate.minExtent;
   }
