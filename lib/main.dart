@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_youtube_app/core/database/sqlite.dart';
 import 'package:flutter_youtube_app/core/theme/theme.dart';
 import 'package:flutter_youtube_app/features/topic/data/local/models/topic.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_bloc.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_event.dart';
 import 'package:flutter_youtube_app/features/topic/presentation/pages/topic_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,14 +37,21 @@ class WiseTubeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: MaterialTheme(GoogleFonts.poppinsTextTheme()).light(),
-      darkTheme: MaterialTheme(GoogleFonts.poppinsTextTheme()).dark(),
-      routes: {
-        Routes.home: (context) => const HomeScreen(),
-        Routes.topic: (context) => const TopicScreen(),
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => TopicBloc()..add(LoadTopicsEvent()),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: MaterialTheme(GoogleFonts.poppinsTextTheme()).light(),
+        darkTheme: MaterialTheme(GoogleFonts.poppinsTextTheme()).dark(),
+        routes: {
+          Routes.home: (context) => const HomeScreen(),
+          Routes.topic: (context) => const TopicScreen(),
+        },
+      ),
     );
   }
 }

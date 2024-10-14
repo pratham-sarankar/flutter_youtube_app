@@ -5,6 +5,6 @@ abstract class TopicRepository {
   Future<Topic> getTopic(String id);
   Future<void> addTopic(Topic topic);
   Future<void> updateTopic(Topic topic);
-  Future<void> deleteTopic(String id);
+  Future<void> deleteTopic(int id);
   Future<void> bulkUpdate(List<Topic> topics);
 }

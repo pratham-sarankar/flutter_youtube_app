@@ -14,6 +14,8 @@ class TopicLoaded extends TopicState {
   });
 }
 
+class TopicAdded extends TopicState {}
+
 class TopicError extends TopicState {
   final String message;
 
@@ -21,3 +23,7 @@ class TopicError extends TopicState {
     required this.message,
   });
 }
+
+class TopicUpdated extends TopicState {}
+
+class TopicDeleted extends TopicState {}

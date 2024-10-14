@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube_app/features/topic/data/local/models/topic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconly/iconly.dart';
 
-class FeedAppBar extends SliverPersistentHeaderDelegate {
+class FeedAppBar extends StatelessWidget {
+  const FeedAppBar({super.key, required this.topics, required this.onSelect});
+  final List<Topic> topics;
+  final Function(int, bool) onSelect;
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+    return SliverPersistentHeader(
+      pinned: false,
+      floating: true,
+      delegate: FeedAppBarDelegate(
+        minHeight: height * 0.08,
+        height: height * 0.15,
+        topics: topics,
+        onSelect: onSelect,
+      ),
+    );
+  }
+}
+
+class FeedAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double height;
   final double minHeight;
-
-  FeedAppBar({
+  final List<Topic> topics;
+  final Function(int, bool) onSelect;
+  FeedAppBarDelegate({
     required this.height,
     required this.minHeight,
+    required this.topics,
+    required this.onSelect,
   });
 
   @override
@@ -35,19 +59,21 @@ class FeedAppBar extends SliverPersistentHeaderDelegate {
                   vertical: 0,
                 ),
                 children: [
-                  for (int i = 0; i < 100; i++)
+                  for (int i = 0; i < topics.length; i++)
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 4,
                       ),
                       child: ChoiceChip(
-                        label: FittedBox(child: Text("Flutter $i")),
+                        label: FittedBox(child: Text(topics[i].name)),
                         padding: EdgeInsets.symmetric(
                           horizontal: height * 0.12,
                           vertical: (height - minHeight) * 0.16,
                         ),
-                        selected: i % 2 == 0,
-                        onSelected: (value) {},
+                        selected: topics[i].isSelected,
+                        onSelected: (value) {
+                          onSelect(i, value);
+                        },
                       ),
                     ),
                 ],
@@ -145,7 +171,7 @@ class FeedAppBar extends SliverPersistentHeaderDelegate {
   double get minExtent => minHeight;
 
   @override
-  bool shouldRebuild(covariant FeedAppBar oldDelegate) {
+  bool shouldRebuild(covariant FeedAppBarDelegate oldDelegate) {
     return height != oldDelegate.maxExtent ||
         minHeight != oldDelegate.minExtent;
   }

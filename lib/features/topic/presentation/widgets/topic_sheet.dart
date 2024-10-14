@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_youtube_app/features/topic/data/local/models/topic.dart';
-import 'package:flutter_youtube_app/features/topic/domain/use_cases/add_topic_use_case.dart';
-import 'package:flutter_youtube_app/features/topic/domain/use_cases/update_topic_use_case.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_bloc.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_event.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/pages/topic_screen.dart';
 
+/// [TopicSheet] is a [StatefulWidget] to edit or add a new topic based on the [topic] parameter.
+/// It will add an event to the [TopicBloc] to update or add the topic and close the sheet without waiting for the response.
+/// The response is handled by [TopicScreen] which has a listener to the [TopicBloc].
 class TopicSheet extends StatefulWidget {
   const TopicSheet({super.key, this.topic});
   final Topic? topic;
@@ -14,8 +19,9 @@ class TopicSheet extends StatefulWidget {
 class _TopicSheetState extends State<TopicSheet> {
   Topic? topic;
   late bool isLoading;
-
   late final GlobalKey<FormState> formKey;
+
+  TopicBloc? get _bloc => context.mounted ? context.read<TopicBloc>() : null;
 
   @override
   void initState() {
@@ -79,7 +85,8 @@ class _TopicSheetState extends State<TopicSheet> {
                   initialValue: topic?.name,
                   onSaved: (value) {
                     if (topic == null) {
-                      topic = Topic(name: value!, precedence: 0);
+                      topic =
+                          Topic(name: value!, precedence: 0, isSelected: false);
                     } else {
                       topic = topic?.copyWith(name: value);
                     }
@@ -113,26 +120,15 @@ class _TopicSheetState extends State<TopicSheet> {
                     isLoading = true;
                   });
                   if (isEditing) {
-                    await UpdateTopicUseCase().execute(topic!);
+                    _bloc?.add(UpdateTopicEvent(topic: topic!));
                   } else {
-                    await AddTopicUseCase().execute(topic!);
+                    _bloc?.add(AddTopicEvent(topic: topic!));
                   }
-                  setState(() {
-                    isLoading = false;
-                  });
                   if (context.mounted) {
+                    setState(() {
+                      isLoading = false;
+                    });
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text("Topic saved successfully"),
-                        dismissDirection: DismissDirection.horizontal,
-                        behavior: SnackBarBehavior.floating,
-                        action: SnackBarAction(
-                          label: "OK",
-                          onPressed: () {},
-                        ),
-                      ),
-                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -8,6 +8,10 @@ import 'package:flutter_youtube_app/features/feed/presentation/blocs/feed_bloc/f
 import 'package:flutter_youtube_app/features/feed/presentation/blocs/feed_bloc/feed_bloc_state.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/widgets/feed_app_bar.dart';
 import 'package:flutter_youtube_app/features/feed/presentation/widgets/youtube_video_card.dart';
+import 'package:flutter_youtube_app/features/topic/data/local/models/topic.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_bloc.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_event.dart';
+import 'package:flutter_youtube_app/features/topic/presentation/blocs/topic_state.dart';
 import 'package:flutter_youtube_search/models/youtube_video.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -18,52 +22,71 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  late final FeedBloc bloc;
-  late final ScrollController scrollController;
+  late final FeedBloc _feedBloc;
+  late final ScrollController _scrollController;
+
+  TopicBloc? get _topicBloc =>
+      context.mounted ? context.read<TopicBloc>() : null;
 
   @override
   void initState() {
     super.initState();
-    bloc = FeedBloc()..add(FetchFeedEvent(query: "Flutter"));
-    scrollController = ScrollController()..addListener(_scrollEndListener);
+    _feedBloc = FeedBloc()..add(FetchFeedEvent(query: "Flutter"));
+    _scrollController = ScrollController()..addListener(_scrollEndListener);
   }
 
   @override
   void dispose() {
-    bloc.close();
-    scrollController.dispose();
+    _feedBloc.close();
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _scrollEndListener() {
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent) {
-      bloc.add(FetchMoreFeedEvent(bloc.state.continuationKey));
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _feedBloc.add(FetchMoreFeedEvent(_feedBloc.state.continuationKey));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.sizeOf(context).height;
     return Scaffold(
       body: BlocConsumer<FeedBloc, FeedBlocState>(
-        bloc: bloc,
+        bloc: _feedBloc,
         listener: (context, state) {
           log("FeedBloc: $state");
         },
         builder: (context, state) {
           return SafeArea(
             child: CustomScrollView(
-              controller: scrollController,
+              controller: _scrollController,
               physics: const ClampingScrollPhysics(),
               slivers: [
-                SliverPersistentHeader(
-                  pinned: false,
-                  floating: true,
-                  delegate: FeedAppBar(
-                    minHeight: height * 0.08,
-                    height: height * 0.15,
-                  ),
+                BlocConsumer<TopicBloc, TopicState>(
+                  listener: (context, state) {
+                    if (state is TopicUpdated) {
+                      context.read<TopicBloc>().add(LoadTopicsEvent());
+                    }
+                  },
+                  builder: (context, state) {
+                    final topics =
+                        state is TopicLoaded ? state.topics : <Topic>[];
+                    return FeedAppBar(
+                      key: UniqueKey(),
+                      topics: topics,
+                      onSelect: (index, selected) {
+                        List<Topic> updatedTopics = topics
+                            .map((e) => e.copyWith(isSelected: false))
+                            .toList();
+                        updatedTopics[index] =
+                            topics[index].copyWith(isSelected: selected);
+                        context
+                            .read<TopicBloc>()
+                            .add(UpdateTopicsEvent(topics: updatedTopics));
+                      },
+                    );
+                  },
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(

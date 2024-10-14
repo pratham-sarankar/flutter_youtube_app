@@ -12,15 +12,22 @@ class LocalTopicDataSource extends TopicRepository {
   }
 
   @override
-  Future<void> deleteTopic(String id) {
-    // TODO: implement deleteTopic
-    throw UnimplementedError();
+  Future<void> deleteTopic(int id) async {
+    await SqliteDatabase.instance.database.delete(
+      Topic.tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   @override
-  Future<Topic> getTopic(String id) {
-    // TODO: implement getTopic
-    throw UnimplementedError();
+  Future<Topic> getTopic(String id) async {
+    final response = await SqliteDatabase.instance.database.query(
+      Topic.tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return Topic.fromMap(response.first);
   }
 
   @override

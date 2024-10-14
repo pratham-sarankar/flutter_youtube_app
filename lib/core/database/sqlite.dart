@@ -32,7 +32,7 @@ class SqliteDatabase {
   Future<Database> _initDatabase(List<String> queries) async {
     final dbPath = await getDatabasesPath();
     String path = join(dbPath, 'database.db');
-    await deleteDatabase(path);
+    // await deleteDatabase(path);
     return await openDatabase(
       path,
       version: 1,
